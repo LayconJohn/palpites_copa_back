@@ -1,8 +1,10 @@
-import { cadastroSchema, loginSchema } from "../schemas/authSchema.js";
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 
-const validaCadastroSchema = (req: Request, res: Response, next) => {
-    const { usuario, email, senha, confirmarSenha }: {usuario: String, email: String, senha: String, confirmarSenha: String} = req.body;
+import { AuthEntity } from "../protocols/authProtocol.js"; //src/protocols/authProtocol.js
+import { cadastroSchema, loginSchema } from "../schemas/authSchema.js";
+
+const validaCadastroSchema = (req: Request, res: Response, next: NextFunction) => {
+    const { usuario, email, senha, confirmarSenha } = req.body as AuthEntity;
 
     const validacao = cadastroSchema.validate({usuario, email, senha, confirmarSenha}, {abortEarly: false});
     if (validacao.error) {

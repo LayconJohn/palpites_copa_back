@@ -1,8 +1,8 @@
 import { connection } from "../database/postgres.js";
 
-async function inserirUsuario(usuario: String, email: String, senha: String) {
+async function inserirUsuario(usuario: string, email: string, senha: string): Promise<string[]> {
     try {
-        const resultado: String[]= (await connection.query(`INSERT INTO users (username, email, password) VALUES ($1, $2, $3)`, [usuario, email, senha])).rows;
+        const resultado: string[]= (await connection.query(`INSERT INTO users (username, email, password) VALUES ($1, $2, $3)`, [usuario, email, senha])).rows;
 
         return resultado;
     } catch (error) {

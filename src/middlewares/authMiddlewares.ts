@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import { verificarUsuario, verificarSessao } from '../repositories/authRepositories.js';
 
-const checarSenha = async (req: Request, res: Response, next) => {
+const checarSenha = async (req: Request, res: Response, next: NextFunction) => {
     const {email, senha}: {email: string, senha: string} = req.body;
     try {
         const usuario: {email: string, password: string} = await verificarUsuario(email);
@@ -20,7 +20,7 @@ const checarSenha = async (req: Request, res: Response, next) => {
     }
 };
 
-const verificarToken = async (req: Request, res: Response, next) => {
+const verificarToken = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.replace("Bearer ", "");
     try {
         const usuario = await verificarSessao(token);
@@ -30,9 +30,11 @@ const verificarToken = async (req: Request, res: Response, next) => {
         if (usuario.active === false) {
             return res.sendStatus(403);
         }
+        res.locals.userId = usuario.userId;
         next();
     } catch (error) {
-        
+        console.error(error);
+        return res.sendStatus(500);
     }
 };
 

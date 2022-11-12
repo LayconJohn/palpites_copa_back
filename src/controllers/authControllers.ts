@@ -2,16 +2,17 @@ import { Request, Response } from 'express';
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 
+import {AuthEntity} from "../protocols/authProtocol.js"
 import { inserirUsuario, cadastrarSessao } from '../repositories/authRepositories.js';
 
 async function registrarUsuario(req: Request, res: Response) {
-    const { usuario, email, senha, confirmarSenha }: {usuario: String, email: String, senha: string, confirmarSenha: String} = req.body;
+    const { usuario, email, senha, confirmarSenha } = req.body as AuthEntity;
 
     if (senha !== confirmarSenha) {
         return res.status(400).send("Os campos de senha devem ser iguais!")
     }
 
-    const senhaEncriptografada: String = bcrypt.hashSync(senha, 10); 
+    const senhaEncriptografada: string = bcrypt.hashSync(senha, 10); 
 
     try {
         await inserirUsuario(usuario, email, senhaEncriptografada);

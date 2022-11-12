@@ -2,14 +2,10 @@ import pg from 'pg';
 
 const { Pool } = pg;
 
-const databaseConfig: {connectionString: string, ssl: {rejectUnauthorized: boolean}} = {
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
+const databaseConfig: {connectionString: string} = {
+    connectionString: process.env.DATABASE_URL
 }
 
-//TODO: Tirar no Any
 const connection = new Pool(databaseConfig);
 
 export {connection};

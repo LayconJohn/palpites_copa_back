@@ -2,6 +2,7 @@
   "name": "palpites_copa",
   "version": "1.0.0",
   "type": "module",
+  "module":"commonjs",
   "description": "",
   "main": "index.js",
   "scripts": {
