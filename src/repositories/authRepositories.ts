@@ -12,7 +12,7 @@ async function inserirUsuario(usuario: string, email: string, senha: string): Pr
 
 }
 
-async function verificarUsuario(email: string) {
+async function verificarUsuario(email: string): Promise<{id?: number, email: string, password: string}> {
     try {
         const usuario: {id: number, email: string, password: string} = (await connection.query('SELECT  id,email, password FROM users WHERE email = $1', [email])).rows[0];
         return usuario;
@@ -22,7 +22,7 @@ async function verificarUsuario(email: string) {
     }
 }
 
-async function cadastrarSessao(userId: number, token: string) {
+async function cadastrarSessao(userId: number, token: string): Promise<string | void> {
     try {
         const resultado: String[] = (await connection.query('INSERT INTO sessions ("userId", token) VALUES ($1, $2)', [userId, token])).rows;
         return token;
@@ -32,7 +32,13 @@ async function cadastrarSessao(userId: number, token: string) {
     }
 }
 
-async function verificarSessao(token: string) {
+async function verificarSessao(token: string): Promise<{
+    id: number,
+    token: string,
+    userId: number,
+    active: boolean,
+    createAt: string | Date
+} | void> {
     try {
         const usuario: {
             id: number,

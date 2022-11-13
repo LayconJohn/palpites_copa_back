@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { AuthEntity } from "../protocols/authProtocol.js"; //src/protocols/authProtocol.js
 import { cadastroSchema, loginSchema } from "../schemas/authSchema.js";
 
-const validaCadastroSchema = (req: Request, res: Response, next: NextFunction) => {
+const validaCadastroSchema = (req: Request, res: Response, next: NextFunction): Response<string[] | void> => {
     const { usuario, email, senha, confirmarSenha } = req.body as AuthEntity;
 
     const validacao = cadastroSchema.validate({usuario, email, senha, confirmarSenha}, {abortEarly: false});
@@ -16,7 +16,7 @@ const validaCadastroSchema = (req: Request, res: Response, next: NextFunction) =
 };
 
 
-const validaLoginSchema = (req: Request, res: Response, next) => {
+const validaLoginSchema = (req: Request, res: Response, next: NextFunction): Response<string[] | void> => {
     const {email, senha}: {email: String, senha: String} = req.body;
 
     const validacao = loginSchema.validate({email, senha}, {abortEarly: false});

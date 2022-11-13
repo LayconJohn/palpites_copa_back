@@ -6,7 +6,7 @@ import { validarJogo, validarPalpite } from "../middlewares/palpitesMiddlewares.
 const router = Router();
 
 router.post("/palpites/:gameId/:resultId", verificarToken, cadastrarPalpite);
-router.post("/palpites/resultado", verificarToken, validarJogo ,cadastrarResultado);
+router.post("/palpites/resultado", verificarToken,cadastrarResultado);
 router.get("/palpites/:gameId", verificarToken, validarJogo ,listarPalpites);
 router.delete("/palpites/:guessId", verificarToken, validarPalpite ,deletarPalpite);
 router.put("/palpites/:guessId", verificarToken, validarPalpite, atualizarPalpite);

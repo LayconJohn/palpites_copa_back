@@ -14,7 +14,7 @@ async function verificarJogo(gameId: number): Promise<JogoEntity> {
 
 async function inserirResultado(homeGuess: number, visitorGuess: number, userId: number): Promise<void> {
     try {
-        await connection.query('INSERT INTO results (homeGuess, visitorGuess) VALUES ($1, $2, $3)', [homeGuess, visitorGuess, userId]);
+        await connection.query('INSERT INTO results ("homeGuess", "visitorGuess", "userId") VALUES ($1, $2, $3)', [homeGuess, visitorGuess, userId]);
         return;
     } catch (error) {
         console.error(error);
@@ -24,7 +24,7 @@ async function inserirResultado(homeGuess: number, visitorGuess: number, userId:
 
 async function inserirPalpite(userId: number, gameId: number, resultId: number): Promise<void> {
     try {
-        await connection.query('INSERT INTO "usersGuess" ("userId", "gameId", "resultId") VALUES ($1, $2 $3)', [userId, gameId, resultId]);
+        await connection.query('INSERT INTO "usersGuess" ("userId", "gameId", "resultId") VALUES ($1, $2, $3)', [userId, gameId, resultId]);
         return;
     } catch (error) {
         console.error(error);
@@ -42,7 +42,7 @@ async function pegarPalpites(gameId: number): Promise<PalpiteEntity[]> {
                 results."visitorGuess" as "visitorGuess",
                 games."homePlayer" as "homePlayer",
                 games."visitorPlayer" as "visitorPlayer"
-            FROM "usersGuess
+            FROM "usersGuess"
             JOIN games ON games.id = "usersGuess"."gameId"
             JOIN results ON results.id = "usersGuess"."resultId"
             JOIN users ON users.id = "usersGuess"."userId"
@@ -58,9 +58,9 @@ async function pegarPalpites(gameId: number): Promise<PalpiteEntity[]> {
 async function deletarPalpiteResultado(guessId: number): Promise<void> {
     try {
         const guess: {id: number, userId: number, resultId: number, gameId: number} = (await connection.query('SELECT * FROM "usersGuess" WHERE id = $1;', [guessId])).rows[0];
-        await connection.query('DELETE * FROM "usersGuess" WHERE id = $1', [guessId]);
-        await connection.query('DELETE * FROM results WHERE id = $1', [guess.resultId]);
-        return
+        await connection.query('DELETE FROM "usersGuess" WHERE id = $1', [guessId]);
+        await connection.query('DELETE FROM results WHERE id = $1', [guess.resultId]);
+        return;
     } catch (error) {
         console.error(error);
         return;

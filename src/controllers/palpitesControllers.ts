@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 
 import {inserirResultado, inserirPalpite, pegarPalpites, deletarPalpiteResultado, atulizarDadosPalpite} from "../repositories/palpitesRepositories.js"
 
-async function cadastrarResultado(req: Request, res: Response) {
+async function cadastrarResultado(req: Request, res: Response): Promise<Response> {
     const {homeGuess, visitorGuess}: {homeGuess: number, visitorGuess: number} = req.body;
     const userId: number = res.locals.userId
 
@@ -15,10 +15,10 @@ async function cadastrarResultado(req: Request, res: Response) {
     } 
 }
 
-async function cadastrarPalpite(req: Request, res: Response) {
+async function cadastrarPalpite(req: Request, res: Response): Promise<Response> {
     const resultId: number = Number(req.params.resultId);
     const gameId: number = Number(req.params.gameId);
-    const {userId} = res.locals;
+    const userId: number = res.locals.userId;
     try {
         await inserirPalpite(userId, gameId, resultId);
         return res.sendStatus(201);
@@ -28,7 +28,7 @@ async function cadastrarPalpite(req: Request, res: Response) {
     }
 }
 
-async function listarPalpites(req: Request, res: Response) {
+async function listarPalpites(req: Request, res: Response): Promise<Response> {
     const gameId: number = res.locals.gameId;
 
     try {
@@ -40,7 +40,7 @@ async function listarPalpites(req: Request, res: Response) {
     }
 }
 
-async function deletarPalpite(req: Request, res: Response) {
+async function deletarPalpite(req: Request, res: Response): Promise<Response> {
     const guessId: number = res.locals.guessId;
 
     try {
@@ -52,7 +52,7 @@ async function deletarPalpite(req: Request, res: Response) {
     }
 }
 
-async function atualizarPalpite(req: Request, res: Response) {
+async function atualizarPalpite(req: Request, res: Response): Promise<Response> {
     const guessId: number = res.locals.guessId;
     const {homeGuess, visitorGuess}: {homeGuess: number, visitorGuess: number} = req.body;
 

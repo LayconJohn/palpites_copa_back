@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import { verificarUsuario, verificarSessao } from '../repositories/authRepositories.js';
+import { User } from "src/protocols/authProtocol.js";
 
-const checarSenha = async (req: Request, res: Response, next: NextFunction) => {
+const checarSenha = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
     const {email, senha}: {email: string, senha: string} = req.body;
     try {
         const usuario: {email: string, password: string} = await verificarUsuario(email);
@@ -20,7 +21,7 @@ const checarSenha = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const verificarToken = async (req: Request, res: Response, next: NextFunction) => {
+const verificarToken = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
     const token = req.headers.authorization?.replace("Bearer ", "");
     try {
         const usuario = await verificarSessao(token);

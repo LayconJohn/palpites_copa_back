@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import {AuthEntity} from "../protocols/authProtocol.js"
 import { inserirUsuario, cadastrarSessao } from '../repositories/authRepositories.js';
 
-async function registrarUsuario(req: Request, res: Response) {
+async function registrarUsuario(req: Request, res: Response): Promise<Response> {
     const { usuario, email, senha, confirmarSenha } = req.body as AuthEntity;
 
     if (senha !== confirmarSenha) {
@@ -25,7 +25,7 @@ async function registrarUsuario(req: Request, res: Response) {
 
 }
 
-async function loginUsuario(req: Request, res: Response) {
+async function loginUsuario(req: Request, res: Response): Promise<Response> {
     const usuario: {id: number, email: string, password: string} = res.locals.usuario;
     const token: string = uuid();
 
