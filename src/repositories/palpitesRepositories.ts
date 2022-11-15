@@ -87,5 +87,28 @@ async function atulizarDadosPalpite(guessId: number, homeGuess: number, visitorG
         return;
     }
 }
+ 
+async function listarPalpitesDoUsuario(userId: number) {
+    try {
+        const palpites: PalpiteEntity[] = (await connection.query(`
+        SELECT
+                "usersGuess".id as id,
+                users.username as username,
+                results."homeGuess" as "homeGuess",
+                results."visitorGuess" as "visitorGuess",
+                games."homePlayer" as "homePlayer",
+                games."visitorPlayer" as "visitorPlayer"
+            FROM "usersGuess"
+            JOIN games ON games.id = "usersGuess"."gameId"
+            JOIN results ON results.id = "usersGuess"."resultId"
+            JOIN users ON users.id = "usersGuess"."userId"
+            WHERE users.id = $1
+        ;`, [userId])).rows;
+        return palpites;
+    } catch (error) {
+        console.error(error);
+        return;
+    }
+}
 
-export {verificarJogo, inserirResultado, inserirPalpite, pegarPalpites, deletarPalpiteResultado, verificarPalpite, atulizarDadosPalpite};
+export {verificarJogo, inserirResultado, inserirPalpite, pegarPalpites, deletarPalpiteResultado, verificarPalpite, atulizarDadosPalpite, listarPalpitesDoUsuario};

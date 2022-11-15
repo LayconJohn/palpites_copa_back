@@ -1,6 +1,6 @@
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 
-import {inserirResultado, inserirPalpite, pegarPalpites, deletarPalpiteResultado, atulizarDadosPalpite} from "../repositories/palpitesRepositories.js"
+import { inserirResultado, inserirPalpite, pegarPalpites, deletarPalpiteResultado, atulizarDadosPalpite, listarPalpitesDoUsuario } from "../repositories/palpitesRepositories.js"
 
 async function cadastrarResultado(req: Request, res: Response): Promise<Response> {
     const {homeGuess, visitorGuess}: {homeGuess: number, visitorGuess: number} = req.body;
@@ -65,4 +65,16 @@ async function atualizarPalpite(req: Request, res: Response): Promise<Response> 
     }
 }
 
-export {cadastrarResultado, cadastrarPalpite, listarPalpites, deletarPalpite, atualizarPalpite};
+async function pegarPalpitePorUsuario(req: Request, res: Response) {
+    const userId: number = Number(req.params.userId);
+    try {
+        const palpitesUsuario = await listarPalpitesDoUsuario(userId);
+        return res.status(200).send(palpitesUsuario);
+    } catch (error) {
+        
+    }
+
+    res.sendStatus(200);
+}
+
+export {cadastrarResultado, cadastrarPalpite, listarPalpites, deletarPalpite, atualizarPalpite, pegarPalpitePorUsuario};

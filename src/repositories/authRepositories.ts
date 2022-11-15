@@ -22,6 +22,16 @@ async function verificarUsuario(email: string): Promise<{id?: number, email: str
     }
 }
 
+async function verificarUsuarioPeloId(userId: number) {
+    try {
+        const usuario: {id: number, username: string} = (await connection.query('SELECT id, username FROM users WHERE id = $1;', [userId])).rows[0];
+        return usuario;
+    } catch (error) {
+        console.error(error);
+        return;
+    }
+}
+
 async function cadastrarSessao(userId: number, token: string): Promise<string | void> {
     try {
         const resultado: String[] = (await connection.query('INSERT INTO sessions ("userId", token) VALUES ($1, $2)', [userId, token])).rows;
@@ -54,4 +64,4 @@ async function verificarSessao(token: string): Promise<{
     }
 }
 
-export {inserirUsuario, verificarUsuario, cadastrarSessao, verificarSessao};
+export {inserirUsuario, verificarUsuario, cadastrarSessao, verificarSessao, verificarUsuarioPeloId};

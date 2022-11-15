@@ -31,7 +31,8 @@ const validarPalpite = async (req: Request, res: Response, next: NextFunction): 
         res.locals.guessId = guessId;
         next()
     } catch (error) {
-        
+        console.error(error);
+        return res.sendStatus(500);
     }
 }
 

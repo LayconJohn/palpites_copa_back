@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
-import { verificarUsuario, verificarSessao } from '../repositories/authRepositories.js';
+import { verificarUsuario, verificarSessao, verificarUsuarioPeloId } from '../repositories/authRepositories.js';
 import { User } from "src/protocols/authProtocol.js";
+import { responseEncoding } from "axios";
 
 const checarSenha = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
     const {email, senha}: {email: string, senha: string} = req.body;
@@ -39,4 +40,23 @@ const verificarToken = async (req: Request, res: Response, next: NextFunction): 
     }
 };
 
-export {checarSenha, verificarToken};
+const verificarUserId = async (req: Request, res: Response, next: NextFunction) => {
+    const userId: number = res.locals.userId;
+    const id: number = Number(req.params.userId);
+
+    try {
+        const usuario: {id: number, username: string} = await verificarUsuarioPeloId(id);
+        if (usuario.id !== userId) {
+            return res.sendStatus(403);
+        }
+        if (!usuario.username) {
+            return res.sendStatus(401);
+        }
+        next();
+    } catch (error) {
+        console.error(error);
+        return res.sendStatus(500);
+    }
+}
+
+export {checarSenha, verificarToken, verificarUserId};
